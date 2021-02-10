@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # written in Py 2.7
 import os
+from datetime import datetime
 hostname = "8.8.8.8"
 filename = "ping.txt"
 file_dir = "./tmp/"
@@ -20,3 +21,18 @@ def safe_open_w(path):
 
 with safe_open_w(file_path) as f: pass
 
+def now_date():
+    now = datetime.now()
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    return dt_string
+
+class Date_Chunk:
+    def __init__ (self, start = None, end = None):
+        self.start_date = start
+        self.end_date = end
+    
+    def update_start_date():
+        self.start_date = now_date()
+
+    def update_end_date():
+        self.start_date = now_date()
