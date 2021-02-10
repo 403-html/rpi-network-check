@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # written in Py 2.7
 import os
+import errno
+import time
 from datetime import datetime
 hostname = "8.8.8.8"
 filename = "ping.txt"
@@ -36,3 +38,21 @@ class Date_Chunk:
 
     def update_end_date():
         self.start_date = now_date()
+
+ans = None
+while True:
+    if ans == "q":
+        break
+
+    chunk = Date_Chunk()
+
+    try:
+        response = os.system("ping -c 1 {} > /dev/null".format(hostname))
+        if response == 0:
+            print hostname, 'is up!'
+        else:
+            print hostname, 'is down!'
+        time.sleep(0.5)
+    except KeyboardInterrupt:
+        ans = "q"
+        pass
