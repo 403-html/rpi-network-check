@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import errno
 import os
@@ -54,7 +54,7 @@ class DateChunk:
     """TODO: Add description"""
     start_date: typing.Optional[str]
     end_date: typing.Optional[str]
-
+    
     def update_start_date(self) -> None:
         """TODO: Add description"""
         self.start_date = now_date()
@@ -81,16 +81,20 @@ while True:
 
         if not response == 0:
             logger.info('%s, is down!', HOSTNAME)
-            if chunk.start_date is None:
-                chunk.update_start_date()
-            elif chunk.end_date is None:
-                chunk.update_end_date()
-            else:
-                # Experimental
-                logger.error('Net not working, from %s to %s', chunk.start_date, chunk.end_date)
-                with open(file_path(FILE_DIR, FILE_NAME), 'w') as f:
-                    f.write('Net not working, from {} to {}'.format(chunk.start_date, chunk.end_date))
-                break
+            chunk.update_start_date()
+
+            while True:
+                response = os.system(f'ping -c 1 {HOSTNAME} > /dev/null')
+
+                if response == 0:
+                    chunk.update_end_date()
+
+                    message = 'Net not working, from {} to {}\n'.format(chunk.start_date, chunk.end_date)
+                    logger.error(message)
+                    
+                    with open(file_path(FILE_DIR, FILE_NAME), 'a+') as f:
+                        f.write(message)
+                    break
         time.sleep(0.5)
     except KeyboardInterrupt:
         ans = 'q'
